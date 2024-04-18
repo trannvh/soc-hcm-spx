@@ -162,7 +162,8 @@ def send_daily_performance_report(message="", report_img=""):
             "tag": "text",
             "text": {
                 "content": message,
-            }
+                "at_all": True,
+            },
         }
 
         # sending post request and saving response as response object
@@ -180,7 +181,7 @@ def send_daily_performance_report(message="", report_img=""):
             "tag": "image",
             "image_base64": {
                 "content": report_img_base64
-            }
+            },
         }
 
         # sending post request and saving response as response object
