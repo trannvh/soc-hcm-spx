@@ -1,0 +1,2 @@
+- [ ] Refactor code
+- [ ] Ideas for scheduler
