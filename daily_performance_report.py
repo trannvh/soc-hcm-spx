@@ -22,14 +22,14 @@ def load_sheet_data_frame(sheet_id, worksheet_name="Daily Report") -> pd.DataFra
     
     return df
 
-def generate_daily_performance_report_message(df: pd.DataFrame, source_name: str = "default"):
+def generate_daily_performance_report_message(df: pd.DataFrame, sheet_id: str, source_name: str = "Default"):
     # Prepare some initial variables
     today = datetime.date.today()
     today_b2 = today - datetime.timedelta(days=2)
     today_b2_str = today_b2.isoformat()
     
     # Message heading content
-    message_heading = f"[Central SOCs] Thống kê các chỉ số KPI dưới target ngày {today_b2_str}"
+    message_heading = f"[{source_name} SOCs] Thống kê các chỉ số KPI dưới target ngày {today_b2_str}"
     
     # Process ontime invalid message
     ontime_invalid_heading = "- Các SOC có Ontime dưới 99%: "
@@ -53,7 +53,7 @@ def generate_daily_performance_report_message(df: pd.DataFrame, source_name: str
     no_feedback_body = ", ".join(no_feedback_values['Station'])
     
     # Process call to action message
-    call_to_action = f"Nhờ các Sup bổ sung đầy đủ feedback tại link:\nhttps://docs.google.com/spreadsheets/d/{configs.gcp_sheet_id_daily_report}"
+    call_to_action = f"Nhờ các Sup bổ sung đầy đủ feedback tại link:\nhttps://docs.google.com/spreadsheets/d/{sheet_id}"
     
     # Compile message content
     message_content = message_heading
@@ -194,14 +194,13 @@ def send_daily_performance_report(message="", report_img=""):
 if __name__ == "__main__": # Check if this file is executed or imported
     # Sheet id list for looping and creating report
     sheet_ids = {
-        "south": configs.gcp_sheet_id_south,
-        "central": configs.gcp_sheet_id_central,
+        "South": configs.gcp_sheet_id_south,
+        "Central": configs.gcp_sheet_id_central,
     }
     
     for sheet_name, sheet_id in sheet_ids.items():
         df = load_sheet_data_frame(sheet_id)
-        report_message = generate_daily_performance_report_message(df, sheet_name)
+        report_message = generate_daily_performance_report_message(df, sheet_id, sheet_name)
         report_img = generate_daily_performance_report_img(df, sheet_name)
-        print(report_message)
         # send_daily_performance_report(report_message, report_img)
        
