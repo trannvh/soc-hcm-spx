@@ -2,6 +2,7 @@ import pandas as pd
 import gspread
 import imgkit
 import base64
+from sys import platform
 
 import configs
 
@@ -53,8 +54,14 @@ def html_to_img(input_filename, ouput_filename, options=None):
             'width': 1920,     # Width of the output image
         }
     # Convert HTML to image
-    imgkit.from_file(input_filename, ouput_filename, options)
+    if platform == "win32":
+        config = imgkit.config(wkhtmltoimage="libs/wkhtmltox/win32/bin/wkhtmltoimage.exe")
+        imgkit.from_file(input_filename, ouput_filename, options, config=config)
+    else:
+        imgkit.from_file(input_filename, ouput_filename, options)
+        
     print(f"HTML file '{input_filename}' has been converted to '{ouput_filename}'.")
+    
     return True
 
 def write_text_to_file(filename, content):
